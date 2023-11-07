@@ -19,22 +19,17 @@ public class AgroBackEndApplication implements CommandLineRunner {
 	@Autowired
 	private GreenHouseController greenHouseController1;
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(AgroBackEndApplication.class, args);
-
 	}
-
-
 
 	@Override
 	public void run(String... args) throws Exception {
 
-		Map<String, Integer> levels = new HashMap<>();
-		levels.put("newLevel", 34);
-		System.out.println(greenHouseController1.updateLightLevel(1, levels));
+	greenHouseController1.waterController(1,1000,1100);
+	greenHouseController1.fertilizerController(1,1300,1400);
 	}
-	}
+}
 		//	<-------------------- tests -------------------->
 
 //		System.out.println("water: " +waterLevelController1.getWaterLevel(1));

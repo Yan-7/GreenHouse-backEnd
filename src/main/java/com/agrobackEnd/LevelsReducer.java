@@ -25,7 +25,7 @@ public class LevelsReducer {
         if (greenHouse1.getWaterLevel() > 0) {
             greenHouse1.setWaterLevel(greenHouse1.getWaterLevel() - 10);
             greenHouseRepository1.save(greenHouse1);
-            System.out.println("water level now: " + greenHouse1.getWaterLevel());
+            System.out.println("water reduced, level now: " + greenHouse1.getWaterLevel());
         }
     }
 
@@ -36,7 +36,7 @@ public class LevelsReducer {
             GreenHouse greenHouse1 = optGreenHouse1.get();
             greenHouse1.setFertilizeLevel(greenHouse1.getFertilizeLevel() - 10);
             greenHouseRepository1.save(greenHouse1);
-            System.out.println("fertilize level now: " + greenHouse1.getFertilizeLevel());
+            System.out.println("fertilize reduced, level now: " + greenHouse1.getFertilizeLevel());
         } else {
             System.out.println("cannot find greenhouse object");
         }

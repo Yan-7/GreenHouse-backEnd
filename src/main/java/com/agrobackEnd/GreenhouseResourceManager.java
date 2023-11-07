@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -15,58 +14,58 @@ public class GreenhouseResourceManager {
     @Autowired
     private GreenHouseRepository greenHouseRepository1;
 
-    private  volatile  int customWaterLevel = 200;
+    private int greenhouseId = 1;
 
-    // Method to update the custom water level
-    public void setCustomWaterLevel(int level) {
-        this.customWaterLevel = level;
+    private int minWaterLevel = 10  ;
+    private int maxWaterLevel = 20;
+
+    private int minFertilizeLevel = 30  ;
+    private int maxFertilizeLevel = 40;
+//----------------------------------------------------------
+
+    // Method to set the parameters for the controlWater task
+    public void setWaterParams(int id, int minLevel, int maxLevel) {
+        this.greenhouseId = id;
+        this.minWaterLevel = minLevel;
+        this.maxWaterLevel = maxLevel;
     }
 
+    public void setFertilizeParams(int id, int minLevel, int maxLevel) {
+        this.greenhouseId = id;
+        this.minFertilizeLevel = minLevel;
+        this.maxFertilizeLevel = maxLevel;
+    }
     // Scheduled task to check and update water level based on the custom level
-    @Scheduled(fixedRate = 60_000) //every one minute
-    public void checkWaterPlants() {
+    @Scheduled(fixedRate = 5_000)
+    public void WaterManager() {
         Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
         if (!optGreenHouse.isPresent()) {
-            System.out.println("Greenhouse not found");
+            System.out.println("Greenhouse not found - GreenhouseResourceManager - controlWater function");
             return;
         }
         GreenHouse greenHouse = optGreenHouse.get();
-        if (greenHouse.getWaterLevel() < customWaterLevel) {
-            greenHouse.setWaterLevel(1000); // This should be set based on some condition or calculation
+        int currentWaterLevel = greenHouse.getWaterLevel();
+        if (currentWaterLevel <= minWaterLevel) {
+            greenHouse.setWaterLevel(maxWaterLevel);
             greenHouseRepository1.save(greenHouse);
-            System.out.println("Greenhouse watered, new level is: " + greenHouse.getWaterLevel());
+            System.out.println("control water function updated water level: " + greenHouse.getWaterLevel());
         }
     }
 
-
-
-
-//    @Scheduled(fixedRate = 1_000) //
-//    public void initiateWatering() {
-//        Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
-//        if (optGreenHouse.isPresent()) {
-//            GreenHouse greenHouse = optGreenHouse.get();
-//            if (greenHouse.getWaterLevel() < 200) {
-//                greenHouse.setWaterLevel(1000);
-//                greenHouseRepository1.save(greenHouse);
-//                System.out.println("greenhouse watered, new water level is: " + greenHouse.getWaterLevel());
-//
-//            }
-//        } else System.out.println("problem fetching greenhouse data");
-//    }
-
-    @Scheduled(fixedRate = 1_000)
-    public void initiateFertilizing() {
+    @Scheduled(fixedRate = 6_000)
+    public void FertilizeManager() {
         Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
-        if (optGreenHouse.isPresent()) {
-            GreenHouse greenHouse1 = optGreenHouse.get();
-            if (greenHouse1.getFertilizeLevel() <200) {
-                greenHouse1.setFertilizeLevel(greenHouse1.getFertilizeLevel() + 1000);
-                greenHouseRepository1.save(greenHouse1);
-                System.out.println("initiatedFertilizing, new level is: " + greenHouse1.getFertilizeLevel());
-            }
+        if (!optGreenHouse.isPresent()) {
+            System.out.println("Greenhouse not found - GreenhouseResourceManager - controlFertilize function");
+            return;
         }
-
+        GreenHouse greenHouse = optGreenHouse.get();
+        int currentFertilizeLevel = greenHouse.getFertilizeLevel();
+        if (currentFertilizeLevel <= minFertilizeLevel) {
+            greenHouse.setFertilizeLevel(maxFertilizeLevel);
+            greenHouseRepository1.save(greenHouse);
+            System.out.println("control fertilize function initiated, new level is: " + greenHouse.getFertilizeLevel());
+        }
     }
 
     @Scheduled(fixedRate = 60_000) //check every minute

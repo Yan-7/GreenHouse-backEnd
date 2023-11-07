@@ -1,11 +1,9 @@
 package com.agrobackEnd;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
@@ -25,28 +23,23 @@ public class GreenHouseController {
         System.out.println("controller getGreenHouse function: " + greenHouse);
         return greenHouse;
     }
-
-
-
     @PutMapping("/{id}/water-level")
-    public GreenHouse updateWaterLevel(@PathVariable int id, @RequestBody Map<String, Integer> levels) {
-        int newLevel = levels.get("newLevel");
-
-        }
-        return greenHouseService.updateWaterLevel(id, newLevel);
+    public String waterController(int id,int min, int max) {
+        greenhouseResourceManager1.setWaterParams(id, min, max);
+        System.out.println("waterController: " + id +" " + min+ " " +max);
+        return "water controller started";
     }
+
+
 
     @PutMapping("/{id}/fertilize-level")
-    public GreenHouse updateFertilizerLevel(@PathVariable int id, @RequestBody Map<String, Integer> levels) {
-        int newLevel = levels.get("newLevel");
-        return  greenHouseService.updateFertilizeLevel(id,newLevel);
+//    @PathVariable int id, @RequestBody Map<String, Integer> levels
+    public String fertilizerController(int id, int min, int max) {
+        greenhouseResourceManager1.setFertilizeParams(id,min,max);
+        System.out.println("fertilizerController: " + id + " " + min + " " + max);
+        return "fertilize controller started";
     }
 
-    @PutMapping("/{id}/light-level")
-    public GreenHouse updateLightLevel(@PathVariable int id, @RequestBody Map<String, Integer> levels) {
-        int newLevel = levels.get("newLevel");
-        return  greenHouseService.updateLightLevel(id,newLevel);
-    }
 
 
 //----------------------------------------
