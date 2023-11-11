@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalTime;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -21,7 +23,14 @@ public class GreenHouse {
 
     private int waterLevel;
 
+    private int minWater;
+    private int maxWater;
+
     private int fertilizeLevel;
+    private int minFertilize;
+    private int maxFertilize;
 
     private  int lightLevel;
+    private LocalTime lightonTime;
+    private LocalTime lightOffTime;
 }

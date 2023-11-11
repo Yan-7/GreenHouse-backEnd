@@ -13,8 +13,6 @@ import java.util.Map;
 @SpringBootApplication
 @EnableScheduling
 public class AgroBackEndApplication implements CommandLineRunner {
-	@Autowired
-	private GreenHouseService greenHouseService;
 
 	@Autowired
 	private GreenHouseController greenHouseController1;
@@ -26,8 +24,6 @@ public class AgroBackEndApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-	greenHouseController1.waterController(1,1000,1100);
-	greenHouseController1.fertilizerController(1,1300,1400);
 	}
 }
 		//	<-------------------- tests -------------------->
