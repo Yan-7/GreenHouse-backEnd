@@ -14,32 +14,40 @@ public class LevelsReducer {
     @Autowired
     GreenHouseRepository greenHouseRepository1;
 
-    @Scheduled(fixedRate = 5_000)
+    @Scheduled(fixedRate = 10_000)
     public void reduceWater() {
-        Optional<GreenHouse> optGreenHouse1 = greenHouseRepository1.findById(1);
-        if (!optGreenHouse1.isPresent()) {
-            System.err.println("GreenHouse not found");
-            return;  // Exit the method
+        for (int i = 1; i <=6 ; i++) {
+            Optional<GreenHouse> optGreenHouse1 = greenHouseRepository1.findById(i);
+            if (!optGreenHouse1.isPresent()) {
+                System.err.println("GreenHouse not found");
+                return;  // Exit the method
+            }
+            GreenHouse greenHouse1 = optGreenHouse1.get();
+            if (greenHouse1.getWaterLevel() > 0) {
+                greenHouse1.setWaterLevel(greenHouse1.getWaterLevel() - 10);
+                greenHouseRepository1.save(greenHouse1);
+                System.out.println("water reduced for greenhouse " + greenHouse1.getId() + " , level now: " + greenHouse1.getWaterLevel());
+            }
         }
-        GreenHouse greenHouse1 = optGreenHouse1.get();
-        if (greenHouse1.getWaterLevel() > 0) {
-            greenHouse1.setWaterLevel(greenHouse1.getWaterLevel() - 10);
-            greenHouseRepository1.save(greenHouse1);
-            System.out.println("water reduced, level now: " + greenHouse1.getWaterLevel());
-        }
+
     }
 
-    @Scheduled(fixedRate = 10_000)
+    @Scheduled(fixedRate = 20_000)
     public void reduceFertilize() {
-        Optional<GreenHouse> optGreenHouse1 = greenHouseRepository1.findById(1);
-        if (optGreenHouse1.isPresent()) {
-            GreenHouse greenHouse1 = optGreenHouse1.get();
-            greenHouse1.setFertilizeLevel(greenHouse1.getFertilizeLevel() - 10);
-            greenHouseRepository1.save(greenHouse1);
-            System.out.println("fertilize reduced, level now: " + greenHouse1.getFertilizeLevel());
-        } else {
-            System.out.println("cannot find greenhouse object");
+        for (int i = 1; i <=6 ; i++) {
+            Optional<GreenHouse> optGreenHouse1 = greenHouseRepository1.findById(i);
+            if (optGreenHouse1.isPresent()) {
+                GreenHouse greenHouse1 = optGreenHouse1.get();
+                if (greenHouse1.getFertilizeLevel() >0 ) {
+                    greenHouse1.setFertilizeLevel(greenHouse1.getFertilizeLevel() - 10);
+                    greenHouseRepository1.save(greenHouse1);
+                    System.out.println("fertilize reduced for greenhouse " + greenHouse1.getId() + " , level now: " + greenHouse1.getFertilizeLevel());
+                }
+            } else {
+                System.out.println("cannot find greenhouse object");
+            }
         }
+
     }
 
 

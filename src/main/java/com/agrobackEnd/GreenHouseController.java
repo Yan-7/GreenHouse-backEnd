@@ -16,7 +16,7 @@ public class GreenHouseController {
 
     @GetMapping("/{id}")
     public GreenHouse getGreenHouse(@PathVariable int id) {
-        GreenHouse greenHouse = greenhouseResourceManager1.getGreenHouse(1);
+        GreenHouse greenHouse = greenhouseResourceManager1.getGreenHouse(id);
         System.out.println("controller getGreenHouse function: " + greenHouse);
         return greenHouse;
     }

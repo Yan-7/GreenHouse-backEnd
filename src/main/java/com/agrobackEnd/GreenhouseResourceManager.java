@@ -14,13 +14,13 @@ public class GreenhouseResourceManager {
     @Autowired
     private GreenHouseRepository greenHouseRepository1;
 
-    private int greenhouseId = 1;
+    private int greenhouseId;
 
-    private int minWaterLevel = 10  ;
-    private int maxWaterLevel = 20;
+    private int minWaterLevel = 0  ;
+    private int maxWaterLevel = 0;
 
-    private int minFertilizeLevel = 30  ;
-    private int maxFertilizeLevel = 40;
+    private int minFertilizeLevel = 0  ;
+    private int maxFertilizeLevel = 0;
 
     private int lightLevel = 0;
     private  LocalTime lightOn = null;
@@ -68,7 +68,7 @@ public class GreenhouseResourceManager {
         this.maxFertilizeLevel = maxLevel;
         Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(id);
         if (!optGreenHouse.isPresent()) {
-            System.out.println("setFertilizeParams - cannot find green house");
+            System.out.println("GreenhouseResourceManager-setFertilizeParams - cannot find green house " + greenhouseId);
             return;
         }
         GreenHouse greenHouse = optGreenHouse.get();
@@ -80,6 +80,10 @@ public class GreenhouseResourceManager {
 
     public GreenHouse getGreenHouse(int id) {
         Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(id);
+        if (!optGreenHouse.isPresent()) {
+            System.out.println("GreenhouseResourceManager-getGreenHouse cannot find greenhouse " + id);
+            return null;
+        }
         GreenHouse greenHouse = optGreenHouse.get();
         return greenHouse;
     }
@@ -93,7 +97,7 @@ public class GreenhouseResourceManager {
             System.out.println("Light parameters are not initialized yet.");
             return;
         }
-        Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
+        Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(greenhouseId);
         if (!optGreenHouse.isPresent()) {
             System.out.println("cannot find green house repository");
             return;
@@ -113,35 +117,41 @@ public class GreenhouseResourceManager {
     // Scheduled task to check and update water level based on the custom level
     @Scheduled(fixedRate = 5_000)
     public void WaterManager() {
-        Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
-        if (!optGreenHouse.isPresent()) {
-            System.out.println("Greenhouse not found - GreenhouseResourceManager - controlWater function");
-            return;
-        }
-        GreenHouse greenHouse = optGreenHouse.get();
-        int currentWaterLevel = greenHouse.getWaterLevel();
-        if (currentWaterLevel <= minWaterLevel) {
-            greenHouse.setWaterLevel(maxWaterLevel);
-            greenHouseRepository1.save(greenHouse);
-            System.out.println("GreenhouseResourceManager  WaterManager: " + greenHouse.getWaterLevel());
+        for (int i = 1; i <=6 ; i++) {
+            greenhouseId = i;
+            Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(greenhouseId);
+            if (!optGreenHouse.isPresent()) {
+                System.out.println("Greenhouse " + greenhouseId + " not found  - GreenhouseResourceManager - WaterManager");
+                return;
+            }
+            GreenHouse greenHouse = optGreenHouse.get();
+            int currentWaterLevel = greenHouse.getWaterLevel();
+            if (currentWaterLevel <= minWaterLevel) {
+                greenHouse.setWaterLevel(maxWaterLevel);
+                greenHouseRepository1.save(greenHouse);
+                System.out.println("GreenhouseResourceManager-WaterManager " + greenhouseId +" water level: " + greenHouse.getWaterLevel());
+            }
         }
     }
 
     @Scheduled(fixedRate = 10_000)
     public void FertilizeManager() {
-        Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(1);
-        if (!optGreenHouse.isPresent()) {
-            System.out.println("Greenhouse not found - GreenhouseResourceManager - controlFertilize function");
-            return;
+        for (int i = 1; i <=6 ; i++) {
+            greenhouseId = i;
+            Optional<GreenHouse> optGreenHouse = greenHouseRepository1.findById(greenhouseId);
+            if (!optGreenHouse.isPresent()) {
+                System.out.println("Greenhouse " + greenhouseId + " not found - GreenhouseResourceManager - FertilizeManager");
+                return;
+            }
+            GreenHouse greenHouse = optGreenHouse.get();
+            int currentFertilizeLevel = greenHouse.getFertilizeLevel();
+            if (currentFertilizeLevel <= minFertilizeLevel) {
+                greenHouse.setFertilizeLevel(maxFertilizeLevel);
+                greenHouseRepository1.save(greenHouse);
+                System.out.println("GreenhouseResourceManager-FertilizeManager new fertilizer level: "  + greenHouse.getFertilizeLevel());
+            }
         }
-        GreenHouse greenHouse = optGreenHouse.get();
-        int currentFertilizeLevel = greenHouse.getFertilizeLevel();
-        if (currentFertilizeLevel <= minFertilizeLevel) {
-            greenHouse.setFertilizeLevel(maxFertilizeLevel);
-            greenHouseRepository1.save(greenHouse);
-            System.out.println("GreenhouseResourceManager FertilizeManager" +
-                    ": " + greenHouse.getFertilizeLevel());
-        }
+
     }
 
 
